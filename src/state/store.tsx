@@ -9,7 +9,7 @@ import {
   type ConceptId, type ControlKey, type Launch, type PredictionType,
 } from '../modules/jump/challenges';
 
-export type ModuleId = 'menu' | 'jump' | 'vector' | 'braking' | 'cornering' | 'atlas' | 'sendit' | 'tricks' | 'race';
+export type ModuleId = 'menu' | 'jump' | 'vector' | 'braking' | 'cornering' | 'atlas' | 'sendit' | 'tricks' | 'race' | 'build';
 export type ConceptLevel = 'needs' | 'developing' | 'demonstrated';
 export type RunStatus = 'ready' | 'flying' | 'landed';
 

@@ -182,3 +182,56 @@ describe('venue data', () => {
     for (const f of FEATURES) if (f.venueId) expect(ids.has(f.venueId)).toBe(true);
   });
 });
+
+import { LEVELS, evaluateDesign, minRadius, profileArea, radiusForStraight, suggestDesign, transitionG, transitionGeometry, type BuildLevel } from './jumpDesign';
+
+describe('jump design', () => {
+  it('transition geometry adds up to the lip height', () => {
+    const t = transitionGeometry(1, 30, 3);
+    expect(t.arcHeight + t.straight * Math.sin(Math.PI / 6)).toBeCloseTo(1, 10);
+    expect(t.arcHeight).toBeCloseTo(3 * (1 - Math.cos(Math.PI / 6)), 10);
+    expect(transitionGeometry(0.3, 40, 5).fits).toBe(false);
+    const r = radiusForStraight(1, 30, 0.8);
+    expect(transitionGeometry(1, 30, r).straight).toBeCloseTo(0.8, 10);
+  });
+  it('minimum radius holds the transition to 1.5 g and quadruples when speed doubles', () => {
+    expect(transitionG(6, minRadius(6))).toBeCloseTo(1.5, 10);
+    expect(minRadius(12) / minRadius(6)).toBeCloseTo(4, 10);
+  });
+  it('suggested designs pass every hard check across speeds and levels', () => {
+    for (const level of Object.keys(LEVELS) as BuildLevel[]) {
+      for (let v = 4; v <= 11.5; v += 0.5) {
+        const d = suggestDesign(v, level, 0.05);
+        const e = evaluateDesign(d, level, 0.05);
+        const failed = e.checks.filter((c) => c.status === 'fail').map((c) => c.id);
+        expect(failed, `${level} @ ${v} m/s`).toEqual([]);
+        expect(e.flights.design.ok && e.flights.design.zone, `${level} @ ${v}`).toBe('slope');
+        expect(e.flights.slow.ok && e.flights.fast.ok && e.flights.fast.zone).toBe('slope');
+        expect(d.lipHeight).toBeLessThanOrEqual(LEVELS[level].maxLip);
+        expect(e.transition.fits).toBe(true);
+        expect(e.sweetWindow).not.toBeNull();
+      }
+    }
+  });
+  it('a first-jump suggestion at 15 mph is in the range trail guides give for beginners', () => {
+    const d = suggestDesign(6.7, 'first', 0.05);
+    expect(d.lipHeight).toBeGreaterThanOrEqual(0.6); // 2–3 ft high
+    expect(d.lipHeight).toBeLessThanOrEqual(0.92);
+    expect(d.tableLength).toBeGreaterThan(1.2); // 4–7 ft long
+    expect(d.tableLength).toBeLessThan(2.2);
+  });
+  it('flags designs that are wrong', () => {
+    const d = suggestDesign(6.7, 'first', 0.05);
+    const ids = (x: typeof d, lvl: BuildLevel = 'first') => evaluateDesign(x, lvl, 0.05).checks.filter((c) => c.status === 'fail').map((c) => c.id);
+    expect(ids({ ...d, tableLength: d.tableLength + 3 })).toContain('design'); // lands on the table
+    expect(ids({ ...d, lipHeight: 1.4 })).toContain('size');
+    expect(ids({ ...d, lipHeight: 2, approach: 4 })).toContain('reach');
+    expect(ids({ ...d, radius: 1.5, lipHeight: 0.9, approach: 8 })).toContain('radius');
+    expect(evaluateDesign({ ...d, landingAngleDeg: 8, landingLength: 1.2 }, 'first', 0.15).verdict).not.toBe('pass');
+  });
+  it('dirt volume grows with every dimension', () => {
+    const d = suggestDesign(6.7, 'first', 0.05);
+    expect(profileArea({ ...d, tableLength: d.tableLength + 1 })).toBeCloseTo(profileArea(d) + d.lipHeight, 6);
+    expect(profileArea({ ...d, lipHeight: d.lipHeight + 0.2, radius: 2 })).toBeGreaterThan(profileArea({ ...d, radius: 2 }));
+  });
+});

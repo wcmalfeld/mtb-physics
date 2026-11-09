@@ -606,3 +606,37 @@ textarea { resize: vertical; }
 .source-list a { color: var(--info); }
 .low-distraction .scene-legend { display: none; }
 @media (max-width: 1080px) { .venue-list { max-height: 300px; overflow-y: auto; padding: 2px; } }
+
+/* ============ Jump Builder ============ */
+.bp-label { stroke: var(--panel-2); }
+.legend-line.dashed { border-top: 2px dashed var(--path); margin-left: 8px; }
+.measure-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.measure-row input { width: 100%; }
+.feedback.small .btn { margin-left: 8px; }
+.check-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.check-list li { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: start; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel-2); }
+.check-list small { display: block; color: var(--ink-soft); font-size: 0.84rem; margin-top: 2px; }
+.check-list strong { font-size: 0.93rem; }
+.check-badge { font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; border-radius: 999px; padding: 3px 8px; text-align: center; border: 1.5px solid; white-space: nowrap; }
+.check-pass .check-badge { color: var(--ok); background: var(--ok-soft); }
+.check-warn .check-badge { color: var(--warn); background: var(--warn-soft); }
+.check-fail .check-badge { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.check-fail { border-color: var(--accent) !important; }
+.zone { fill: var(--line); }
+.zone-slope { fill: var(--target-top); }
+.zone-case { fill: var(--sun); }
+.zone-flat { fill: var(--accent); }
+.zone-text { font-size: 9px; font-weight: 800; fill: #14201a; }
+.window-chart { max-width: 100%; }
+.sheet { margin: 0 0 10px; display: grid; gap: 0; font-size: 0.92rem; }
+.sheet > div { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); align-items: baseline; }
+.sheet dt { color: var(--ink-soft); }
+.sheet dd { margin: 0; font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+.dig-steps { margin: 0 0 10px; padding-left: 1.3rem; display: grid; gap: 8px; font-size: 0.93rem; }
+@media print {
+  .app-header, .tutor-drawer, .no-print, .skip-link, .scene-legend { display: none !important; }
+  body, .app { background: #fff !important; }
+  main { padding: 0 !important; }
+  .lab-grid { display: block !important; }
+  .card { box-shadow: none !important; break-inside: avoid; margin-bottom: 12px; }
+}

@@ -23,6 +23,8 @@ export interface JumpGeometry {
   landingAngleDeg: number;
   /** length of the landing slope measured along the slope, m */
   landingLength: number;
+  /** true = the space between lip and knuckle is filled in level with the lip (a tabletop) */
+  tabletop?: boolean;
 }
 
 export interface Air {
@@ -85,6 +87,11 @@ export function terrainPoints(geo: JumpGeometry): { x: number; y: number }[] {
   const floor = -geo.lipHeight;
   const a = rad(geo.landingAngleDeg);
   const k = geo.knuckleHeight;
+  if (geo.tabletop) {
+    const tx = geo.gap + geo.landingLength * Math.cos(a);
+    const ty = k - geo.landingLength * Math.sin(a);
+    return [{ x: 0, y: 0 }, { x: geo.gap, y: k }, { x: tx, y: ty }, { x: tx + 400, y: ty }];
+  }
   // the pit between takeoff and landing: run-in level for a normal double, a canyon for a step-down
   const pit = Math.min(floor, k - 1);
   const face = Math.min(geo.gap * 0.45, Math.max(0.4, (k - pit) * 0.7)); // steep front face of the landing mound

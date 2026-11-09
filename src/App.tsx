@@ -173,7 +173,12 @@ function ModuleMenu() {
       <ul className="module-grid">
         {MODULES.filter((m) => m.group === 'pro').map((m) => <ModuleCard key={m.id} m={m} cta="Open →" />)}
       </ul>
-      <p className="menu-note">An educational simulation, not a bike-design or safety tool. Nothing you do here leaves this browser tab.</p>
+      <h2 className="menu-h">Build it for real</h2>
+      <p className="menu-sub">Use everything above to design a jump you can actually dig.</p>
+      <ul className="module-grid">
+        {MODULES.filter((m) => m.group === 'build').map((m) => <ModuleCard key={m.id} m={m} cta="Design a jump →" />)}
+      </ul>
+      <p className="menu-note">The labs are educational simulations, not bike-design or safety tools. The Jump Builder gives starting dimensions that you must test and adjust on the ground. Nothing you do here leaves this browser tab.</p>
     </div>
   );
 }

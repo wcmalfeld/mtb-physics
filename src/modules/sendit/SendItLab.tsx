@@ -231,7 +231,7 @@ export function SendItLab() {
   );
 
   /* ---------- controls ---------- */
-  const len = (label: string, key: keyof JumpGeometry, min: number, max: number, help?: string) => (
+  const len = (label: string, key: 'lipHeight' | 'gap' | 'landingLength' | 'knuckleHeight', min: number, max: number, help?: string) => (
     <Slider label={label} unit={f.L.length} value={lengthToDisplay(geo[key], u)} min={lengthToDisplay(min, u)} max={lengthToDisplay(max, u)} step={us ? 0.5 : 0.1} onChange={(v) => patchGeo({ [key]: lengthFromDisplay(v, u) })} help={help} />
   );
   const controls = (

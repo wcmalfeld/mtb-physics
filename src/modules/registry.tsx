@@ -8,6 +8,7 @@ import { WorldTour } from './atlas/WorldTour';
 import { SendItLab } from './sendit/SendItLab';
 import { TrickLab } from './tricks/TrickLab';
 import { RaceLab } from './race/RaceLab';
+import { BuildLab } from './build/BuildLab';
 
 /**
  * Module registry. To add a lab: create a component in src/modules/<name>/,
@@ -22,7 +23,7 @@ export interface ModuleDef {
   Component: ComponentType;
   featured?: boolean;
   /** foundations = the core concept labs; pro = labs built on real venues and fuller physics */
-  group: 'foundations' | 'pro' | 'tour';
+  group: 'foundations' | 'pro' | 'tour' | 'build';
 }
 
 export const MODULES: ModuleDef[] = [
@@ -98,6 +99,16 @@ export const MODULES: ModuleDef[] = [
     icon: <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round"><path d="M4 7 L11 13 L15 12 L21 21 L28 25" /><circle cx="15" cy="12" r="2.6" fill="var(--accent)" stroke="var(--accent)" /><path d="M24 6 V14 M24 6 H29 V10 H24" /></svg>,
     Component: RaceLab,
     group: 'pro',
+  },
+  {
+    id: 'build',
+    title: 'Jump Builder',
+    tagline: 'Measure your speed, size a tabletop with the math, check it across your real speed range, and print a build sheet.',
+    concepts: 'Design from equations · transition radius · speed window · dirt volume',
+    icon: <svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round"><path d="M3 25 Q10 25 13 17 H20 L27 25" stroke="var(--accent)" /><path d="M3 29 H29 M13 12 V8 M20 12 V8 M13 10 H20" /></svg>,
+    Component: BuildLab,
+    featured: true,
+    group: 'build',
   },
 ];
 
