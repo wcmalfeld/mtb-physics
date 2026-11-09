@@ -9,7 +9,7 @@ import {
   type ConceptId, type ControlKey, type Launch, type PredictionType,
 } from '../modules/jump/challenges';
 
-export type ModuleId = 'menu' | 'jump' | 'vector' | 'braking' | 'cornering';
+export type ModuleId = 'menu' | 'jump' | 'vector' | 'braking' | 'cornering' | 'atlas' | 'sendit' | 'tricks' | 'race';
 export type ConceptLevel = 'needs' | 'developing' | 'demonstrated';
 export type RunStatus = 'ready' | 'flying' | 'landed';
 
@@ -49,6 +49,10 @@ export interface CheckAnswer {
 
 export interface State {
   module: ModuleId;
+  /** id of a venue feature / track / trick a lab should open with (set from the World Tour) */
+  preset: string | null;
+  /** venue highlighted in the World Tour */
+  venueId: string | null;
   units: UnitSystem;
   mode: 'explore' | 'challenge';
   challengeId: string;
@@ -88,6 +92,8 @@ const DEFAULT_PANELS: Panels = { vectors: false, physics: false, steps: false, a
 export function initialState(): State {
   return {
     module: 'menu',
+    preset: null,
+    venueId: null,
     units: 'us',
     mode: 'explore',
     challengeId: CHALLENGES[0].id,
@@ -129,6 +135,8 @@ export function initialState(): State {
 
 export type Action =
   | { type: 'setModule'; module: ModuleId }
+  | { type: 'openLab'; module: ModuleId; preset?: string; venueId?: string }
+  | { type: 'selectVenue'; id: string | null }
   | { type: 'setUnits'; units: UnitSystem }
   | { type: 'setParam'; key: keyof LaunchParams; value: number }
   | { type: 'setTarget'; key: keyof Target; value: number }
@@ -208,8 +216,12 @@ export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'setModule':
       return state.status === 'flying'
-        ? { ...state, module: action.module, status: 'ready', current: null, history: state.history.slice(0, -1) }
-        : { ...state, module: action.module };
+        ? { ...state, module: action.module, preset: null, status: 'ready', current: null, history: state.history.slice(0, -1) }
+        : { ...state, module: action.module, preset: null };
+    case 'openLab':
+      return { ...state, module: action.module, preset: action.preset ?? null, venueId: action.venueId ?? state.venueId, labResetKey: state.labResetKey + 1 };
+    case 'selectVenue':
+      return { ...state, venueId: action.id };
     case 'setUnits':
       return { ...state, units: action.units };
     case 'setParam': {

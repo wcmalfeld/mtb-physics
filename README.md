@@ -19,7 +19,7 @@ Requires Node 18+.
 | Area | Where |
 |---|---|
 | Physics (SI only, pure functions) | `src/physics/projectile.ts`, `src/physics/labs.ts`, `src/physics/units.ts` |
-| Physics tests | `src/physics/physics.test.ts` |
+| Physics tests | `src/physics/physics.test.ts`, `src/physics/pro.test.ts` |
 | App state (one reducer + derived values) | `src/state/store.tsx` |
 | Jump Lab UI | `src/modules/jump/` (scene, controls, panels, challenges, transfer checks) |
 | Other labs | `src/modules/vector/`, `src/modules/braking/`, `src/modules/cornering/` |
@@ -34,6 +34,21 @@ Requires Node 18+.
 - **No answer leaks.** With *Predict first* on (or required by the tutor/challenge), the path, landing marker, outcome, landing-dependent equation steps and even the auto-zoom extent are hidden until launch.
 - **Stepped zoom.** The scene zooms in 4 m steps so dragging a slider visibly moves the landing instead of rescaling the view.
 - **Time-based animation**, slow-motion playback (≈0.55× real time), runs only while flying. Reduced-motion and Focus mode skip straight to the landing.
+
+## Pro labs and World Tour
+
+Built on top of the four foundation labs. All 2026 results and venue facts were collected in November 2026; each venue card lists its sources.
+
+| Module | What it teaches | Where |
+|---|---|---|
+| World Tour 2026 | 20 real venues on a map (DH World Cup rounds, Worlds, Hardline, Slopestyle Super League, Rampage, Darkfest, dirt-jump spots). Local gravity from latitude, air density from altitude, links into the labs. | `src/modules/atlas/`, `src/data/venues.ts` |
+| Send It Lab | Energy lost climbing the lip, drag and wind (RK4 integration), sloped landings, impact as "equivalent drop to flat". Presets include Darkfest's 110 ft gap and Falcon Heavy. | `src/modules/sendit/`, `src/physics/flight.ts`, `src/data/features.ts` |
+| Trick Lab | Conservation of angular momentum: snap, tuck, spin rate, rotation as area under the ω–t graph. | `src/modules/tricks/`, `src/physics/rotation.ts` |
+| Race Run Lab | Point-mass lap-time simulation of Val di Sole, Whistler 1199 and Leogang against the real 2026 winning times, with an energy budget and predict-then-test experiments. | `src/modules/race/`, `src/physics/descent.ts`, `src/data/tracks.ts` |
+
+**Real vs modeled.** Track length, drop and winning times are published figures. The section-by-section track layouts are modeled and tuned so the elite preset lands within 4% of the real time (a test enforces this). Jump presets list which dimensions are published and which are modeled. Moments of inertia in the Trick Lab are estimates.
+
+The map uses `d3-geo`, `topojson-client` and `world-atlas` (bundled; still no network calls at runtime). Source links on venue cards open external sites only when clicked.
 
 ## Physics model
 

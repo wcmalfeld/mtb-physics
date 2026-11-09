@@ -123,26 +123,55 @@ function Header() {
   );
 }
 
+function ModuleCard({ m, cta }: { m: (typeof MODULES)[number]; cta: string }) {
+  const { dispatch } = useStore();
+  return (
+    <li className={`module-card ${m.featured ? 'featured' : ''}`}>
+      <button type="button" onClick={() => dispatch({ type: 'setModule', module: m.id })}>
+        <span className="module-icon" aria-hidden="true">{m.icon}</span>
+        <span className="module-title">{m.title}</span>
+        <span className="module-tag">{m.tagline}</span>
+        <span className="module-concepts">{m.concepts}</span>
+        <span className="module-go" aria-hidden="true">{cta}</span>
+      </button>
+    </li>
+  );
+}
+
 function ModuleMenu() {
   const { dispatch } = useStore();
+  const tour = MODULES.find((m) => m.group === 'tour')!;
   return (
     <div className="menu">
       <section className="hero">
         <h1>The Physics Behind Your Riding</h1>
-        <p>Change the speed, angle and height. Predict what happens. Then see the math that explains it.</p>
+        <p>Start with the basics on a simple jump. Then take the same physics to the tracks and jumps the pros rode in 2026.</p>
       </section>
+
+      <button type="button" className="tour-banner" onClick={() => dispatch({ type: 'setModule', module: 'atlas' })}>
+        <span className="tour-banner-text">
+          <span className="eyebrow">New · {tour.title}</span>
+          <span className="tour-banner-title">Where in the world do you want to ride?</span>
+          <span className="module-tag">{tour.tagline}</span>
+          <span className="module-go" aria-hidden="true">Open the map →</span>
+        </span>
+        <span className="tour-banner-stats" aria-hidden="true">
+          <span><strong>3:28.785</strong>Goldstone, Black Snake</span>
+          <span><strong>110 ft</strong>Darkfest gap</span>
+          <span><strong>94.50</strong>Godziek, Rhapsody</span>
+        </span>
+      </button>
+
+      <h2 className="menu-h">Foundations</h2>
+      <p className="menu-sub">One idea at a time, with predictions, hints and tutor tools.</p>
       <ul className="module-grid">
-        {MODULES.map((m) => (
-          <li key={m.id} className={`module-card ${m.featured ? 'featured' : ''}`}>
-            <button type="button" onClick={() => dispatch({ type: 'setModule', module: m.id })}>
-              <span className="module-icon" aria-hidden="true">{m.icon}</span>
-              <span className="module-title">{m.title}</span>
-              <span className="module-tag">{m.tagline}</span>
-              <span className="module-concepts">{m.concepts}</span>
-              <span className="module-go" aria-hidden="true">{m.featured ? 'Start here →' : 'Open →'}</span>
-            </button>
-          </li>
-        ))}
+        {MODULES.filter((m) => m.group === 'foundations').map((m) => <ModuleCard key={m.id} m={m} cta={m.featured ? 'Start here →' : 'Open →'} />)}
+      </ul>
+
+      <h2 className="menu-h">Pro labs</h2>
+      <p className="menu-sub">The same physics with the simplifications taken out: air, wind, slopes, spin and real race tracks.</p>
+      <ul className="module-grid">
+        {MODULES.filter((m) => m.group === 'pro').map((m) => <ModuleCard key={m.id} m={m} cta="Open →" />)}
       </ul>
       <p className="menu-note">An educational simulation, not a bike-design or safety tool. Nothing you do here leaves this browser tab.</p>
     </div>
